@@ -1,0 +1,7 @@
+*.sw*
+*~
+client/build/
+client/bin/
+client/node_modules/
+client/vendor/
+server/server

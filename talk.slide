@@ -1,0 +1,139 @@
+Using OAuth in AngularJS
+9 July 2015
+
+Charles Haynes
+ceh@ceh.bz
+
+* Authentication Recap
+Basic Auth
+Token Based
+OAuth
+Multi-factor
+
+* Basic Auth
+Browser UI
+Can send username & password
+Your server
+Logoff is hard
+
+* Token Based
+Resource request requires a token
+Authenticate once, get a token
+Provide token on every request
+Can be transferred, revoked, renewed, limited scope
+Your server
+
+* OAuth
+A flavor of Token Based
+Don't use OAuth 1.0 (lots of crypto, vulnerable to session vixation)
+_Not_ your server!
+
+* Multi-factor
+Something you have + something you know
+Hardware
+Software
+Biometric
+Out of scope for this talk
+
+* Basic Auth Example
+Client side code doesn't need to do anything
+
+.code client/src/app/basic/basic.js /\.controller/,/\}\]\)/
+
+.link http://localhost:8888/basic
+
+* Token Auth
+Resource access requires an auth token
+Token is obtained from authentication service
+Token can be provided in query (in history) or header (better)
+OAuth is a kind of token auth
+
+* Token Auth Example
+Optimistically try to obtain resource
+Decorate all outgoing requests
+Intercept authentication errors
+Try to refresh (hope for existing authentication)
+Login only when all else fails
+
+* Token Auth Example (controller)
+Optimistically try to obtain resource
+
+.code client/src/app/token/token.js /\.controller/,/\}\]\)/
+
+.link http://localhost:8888
+
+* Token Auth (injector)
+Decorate every outgoing request with auth token
+
+.code client/src/app/app.js /injector/,/\}\]\)/
+
+* Token Auth (interceptor)
+Intercept authentication errors
+
+.code client/src/app/token/token.js /\.responseInterceptors/,/\};/
+
+* Token Auth (response interceptor)
+Make sure they're the right errors and refresh
+
+.code client/src/app/token/token.js /401/,/\}$/
+
+* Token Auth (refresh failed)
+
+.code client/src/app/token/token.js /start refreshFailed/,/end refreshFailed/
+
+* Token Auth (login)
+Login if required
+
+.code client/src/app/login/login.js /\.controller/,/\}\]\)/
+
+* OAuth
+Same injector
+Same interceptor (but catch 403 too)
+Same logic for failed refresh
+3rd party login via redirect
+Token returned by callback
+
+* OAuth (login)
+Login is pretty similar *BUT* you have to handle the redirect and callback
+Make sure your callback is HTTPS
+
+.code client/src/app/oauth-login/oauth-login.js /\.controller/,/\}\]\)/
+
+* OAuth (callback routing)
+Handling the routing for callbacks can be tricky
+
+.code client/src/app/oauth-login/oauth-login.js /oauthCallback/,/\}\);/
+
+* OAuth (callback controller)
+
+.code client/src/app/oauth-login/oauth-login.js /\.controller.*OAuthCallbackCtrl/,/\}\]\)/
+
+* Summary
+Inject Authorization header
+Intercept 401's and 403's
+Store login results for re-use
+Leave your resource calls simple
+
+* Reduce the pain even more
+OAuth directives
+[[http://andreareginato.github.io/oauth-ng/][oauth-ng]]
+
+OAuth libraries and SDK (commercial)
+[[https://auth0.com/][Auth0]]
+
+Common simple interoperable layer on top of OAuth
+[[http://openid.net/connect/][OpenID Connect]]
+
+* References
+[[http://engineering.talis.com/articles/elegant-api-auth-angular-js/][Elegant token-based API access with AngularJS]]
+[[http://anandsekar.github.io/oauth2-with-angularjs/][OAuth2 with AngularJS]]
+[[https://blog.nraboy.com/2015/03/using-oauth-2-0-in-your-web-browser-with-angularjs/][Using Oauth 2.0 In Your Web Browser With AngularJS]]
+[[https://developers.google.com/identity/protocols/OAuth2][Using OAuth 2.0 to Access Google APIs]]
+[[https://developers.google.com/identity/protocols/OAuth2UserAgent][Using OAuth 2.0 for Client-side Application]]
+[[https://developers.google.com/oauthplayground][OAuth 2.0 Playground]]
+[[https://www.owasp.org/index.php/Authentication_Cheat_Sheet][OWASP Authentication Cheat Sheet]]
+[[http://oauth.net/2/][OAuth 2.0 spec]]
+[[https://developers.google.com/identity/protocols/OpenIDConnect][Google OpenID Connect]]
+
+* Code
+[[]]

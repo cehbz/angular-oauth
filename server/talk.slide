@@ -1,0 +1,87 @@
+Event Sourcing In Go
+5 May 2015
+
+Charles Haynes
+ceh@ceh.bz
+
+* What is event sourcing?
+
+"all changes to application state are stored as a sequence of events"
+-- Martin Fowler
+
+* Why would you want it?
+
+"[T]here are times when we don't just want to see where we are, we also want to know how we got there."
+-- Martin Fowler
+
+You're already using it. Your bank statement is an event store.
+
+* How do you implement it in Go?
+
+* Concretely: Social Food App
+Check in meals
+Location
+Date
+Get badges "Breakfast Club" "The Regular"
+
+* Example: Restful JSON over HTTP
+Nice adaptive web site with native Android and iOS apps for your front end
+Talks to your back end using Restful JSON over HTTP
+GET your current list of check-ins
+GET your badges
+POST a checkin
+POST your login
+
+* Client event request
+These client events are sent as JSON strings
+
+.code main.go /^type MSI/,/^}/
+
+* Parsed into ClientMeal struct via map[string]interface{}
+.code main.go /^func ParseMSI/,/^}/
+
+* Parsed into ClientMeal struct directly
+.code main.go /^func ParseClientMeal/,/^}/
+
+* Validation
+.code main.go /^type ClientEvent/,/^}/
+.code main.go /^func \(cm ClientMeal\) Valid/,/^}/
+
+* Converted into domain event
+.code main.go /^type Meal/,/^}/
+.code main.go /^func NewMeal/,/^}/
+
+* Stored
+.code main.go /^func WriteEvent/,/^}/
+
+* Sent
+.code main.go /^func EventHandler/,/^}/
+
+* Handled
+.code main.go /^func \(m Meal\) Handle/,/^}/
+
+* Read Model
+
+.code main.go /^type Client struct/,/var clients map/
+
+* Get my badges
+
+.code main.go /^func badges/,/^}/
+
+* Get Badges Handler
+.code main.go /func \(g GetBadges\) Handle/,/^}/
+
+* Summary
+
+Changes are stored as business domain events
+Events store is append only and immutable
+Front end validation format only, no read model
+
+* References
+[[http://martinfowler.com/eaaDev/EventSourcing.html][Martin Fowler]]
+[[http://docs.geteventstore.com/introduction/event-sourcing-basics/][Geteventstore event sourcing basics]]
+[[http://en.wikipedia.org/wiki/Object-relational_impedance_mismatch][Object-relational impedance mismatch]]
+[[https://msdn.microsoft.com/en-us/library/jj591559.aspx][Microsoft introducing event sourcing]]
+[[https://msdn.microsoft.com/en-us/library/dn589792.aspx][Microsoft event sourcing pattern]]
+[[https://msdn.microsoft.com/en-us/library/jj591577.aspx][Microsoft CQRS & ES deep dive]]
+[[http://talks.golang.org/2015/json.slide][Parsing JSON in Go]]
