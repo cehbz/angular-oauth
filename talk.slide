@@ -135,5 +135,6 @@ Common simple interoperable layer on top of OAuth
 [[http://oauth.net/2/][OAuth 2.0 spec]]
 [[https://developers.google.com/identity/protocols/OpenIDConnect][Google OpenID Connect]]
 
-* Code
-[[]]
+* Slides and code
+[[https://github.com/charles-haynes/angular-oauth]]
+Presented with [[https://godoc.org/golang.org/x/tools/cmd/present][Go present]]
